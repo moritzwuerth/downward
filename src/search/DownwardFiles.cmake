@@ -532,6 +532,13 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+        NAME H2_HEURISTIC
+        HELP "The h2 heuristic"
+        SOURCES
+        heuristics/h2_heuristic
+)
+
+fast_downward_plugin(
     NAME HM_HEURISTIC
     HELP "The h^m heuristic"
     SOURCES

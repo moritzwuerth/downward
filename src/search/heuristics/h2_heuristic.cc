@@ -19,11 +19,15 @@ UnaryOperator::UnaryOperator(
     int num_preconditions,
     vector<PropID> &&preconditions,
     PropID add_effect,
+    int num_del_effects,
+    vector<PropID> &&del_effects,
     int operator_no,
     int base_cost)
     : num_preconditions(num_preconditions),
       preconditions(move(preconditions)),
       add_effect(add_effect),
+      num_del_effects(num_del_effects),
+      del_effects(move(del_effects)),
       operator_no(operator_no),
       base_cost(base_cost) {
 }
@@ -59,6 +63,22 @@ H2Heuristic::H2Heuristic(const Options &opts)
 
     // Build propositions.
     propositions.resize(task_properties::get_num_facts(task_proxy));
+
+    vector<vector<PropID>> propId_pairs;
+    for(Proposition &prop : propositions){
+        vector<PropID> temp;
+        temp.push_back(get_prop_id(prop));
+        propId_pairs.push_back(temp);
+        for(Proposition &prop2 : propositions){
+            vector<PropID> temp2;
+            if (get_prop_id(prop) != get_prop_id(prop2)){
+                temp2.push_back(get_prop_id(prop));
+                temp2.push_back(get_prop_id(prop2));
+                propId_pairs.push_back(temp2);
+            }
+        }
+
+    }
 
     // Build proposition offsets.
     VariablesProxy variables = task_proxy.get_variables();
@@ -97,23 +117,26 @@ H2Heuristic::H2Heuristic(const Options &opts)
             log << "    num preconditions: " << op.num_preconditions << endl;
             log << "    preconditions: " << op.preconditions << endl;
             log << "    add effect: " << op.add_effect << endl;
+            log << "    num delete effect: " << op.num_del_effects << endl;
+            log << "    del effect: " << op.del_effects << endl;
             log << "    original operator no: " << op.operator_no << endl;
             log << "    original operator cost: " << op.base_cost << endl;
         }
     }
+
 }
 
-void H2Heuristic::build_unary_operators(const OperatorProxy &op) {
+void H2Heuristic::build_unary_operators(const OperatorProxy &op) {  //need 2 Operators
     assert(!op.is_axiom());
     int op_no = op.is_axiom() ? -1 : op.get_id();
     int base_cost = op.get_cost();
     vector<PropID> precondition_props;
-    PreconditionsProxy preconditions = op.get_preconditions();
+    PreconditionsProxy preconditions = op.get_preconditions();      //need precondition pair
     precondition_props.reserve(preconditions.size());
     for (FactProxy precondition : preconditions) {
         precondition_props.push_back(get_prop_id(precondition));
     }
-    for (EffectProxy effect : op.get_effects()) {
+    for (EffectProxy effect : op.get_effects()) {                   //need add effect pair
         PropID effect_prop = get_prop_id(effect.get_fact());
         EffectConditionsProxy eff_conds = effect.get_conditions();
         precondition_props.reserve(preconditions.size() + eff_conds.size());
@@ -123,9 +146,11 @@ void H2Heuristic::build_unary_operators(const OperatorProxy &op) {
 
         // The sort-unique can eventually go away. See issue497.
         vector<PropID> preconditions_copy(precondition_props);
+        vector<PropID> del_effects_copy(precondition_props);
         utils::sort_unique(preconditions_copy);
+        utils::sort_unique(del_effects_copy);
         unary_operators.emplace_back(
-            preconditions_copy.size(), move(preconditions_copy), effect_prop,
+            preconditions_copy.size(), move(preconditions_copy), effect_prop,del_effects_copy.size(), move(del_effects_copy),
             op_no, base_cost);
         precondition_props.erase(precondition_props.end() - eff_conds.size(), precondition_props.end());
     }

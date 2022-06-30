@@ -21,11 +21,15 @@ struct UnaryOperator {
     UnaryOperator(int num_preconditions,
                   std::vector<PropID> &&preconditions,
                   PropID add_effect,
+                  int num_del_effects,
+                  std::vector<PropID> &&del_effects,
                   int operator_no,
                   int base_cost);
     int num_preconditions;
     std::vector<PropID> preconditions;
     PropID add_effect;
+    int num_del_effects;
+    std::vector<PropID> del_effects;
     int operator_no; // -1 for axioms; index into the task's operators otherwise
     int base_cost;
 
@@ -40,6 +44,7 @@ class H2Heuristic : public Heuristic {
     std::vector<UnaryOperator> unary_operators;
     std::vector<Proposition> propositions;
     std::vector<PropID> goal_propositions;
+    std::vector<std::vector<PropID>> propId_pairs;
 
     void build_unary_operators(const OperatorProxy &op);
 protected:

@@ -2,6 +2,7 @@
 #define HEURISTICS_H2_HEURISTIC_H
 
 #include "../heuristic.h"
+#include <unordered_map>
 
 namespace h2_heuristic {
 struct Proposition;
@@ -9,7 +10,7 @@ struct UnaryOperator;
 
 using PropID = int;
 using OpID = int;
-
+using Prop_Original_Size = int;
 const OpID NO_OP = -1;
 
 struct Proposition {
@@ -20,14 +21,14 @@ struct Proposition {
 struct UnaryOperator {
     UnaryOperator(int num_preconditions,
                   std::vector<PropID> &&preconditions,
-                  PropID add_effect,
+                  std::vector<PropID> &&add_effect,
                   int num_del_effects,
                   std::vector<PropID> &&del_effects,
                   int operator_no,
                   int base_cost);
     int num_preconditions;
     std::vector<PropID> preconditions;
-    PropID add_effect;
+    std::vector<PropID> add_effect;
     int num_del_effects;
     std::vector<PropID> del_effects;
     int operator_no; // -1 for axioms; index into the task's operators otherwise
@@ -44,7 +45,9 @@ class H2Heuristic : public Heuristic {
     std::vector<UnaryOperator> unary_operators;
     std::vector<Proposition> propositions;
     std::vector<PropID> goal_propositions;
-    std::vector<std::vector<PropID>> propId_pairs;
+    std::unordered_map<std::string,std::unordered_map<std::string, int>> prop_pairs;
+    Prop_Original_Size original_size;
+    std::vector<PropID> original_propIDs;
 
     void build_unary_operators(const OperatorProxy &op);
 protected:
@@ -59,7 +62,7 @@ public:
     */
     PropID get_prop_id(const Proposition &prop) const {
         PropID prop_id = &prop - propositions.data();
-        assert(utils::in_bounds(prop_id, propositions));
+        //assert(utils::in_bounds(prop_id, propositions));
         return prop_id;
     }
 

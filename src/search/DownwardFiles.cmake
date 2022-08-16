@@ -532,10 +532,25 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+        NAME Strips_task
+        HELP "The strips task"
+        SOURCES
+            heuristics/strips_task
+)
+
+fast_downward_plugin(
         NAME H2_HEURISTIC
         HELP "The h2 heuristic"
         SOURCES
-        heuristics/h2_heuristic
+            heuristics/h2_heuristic
+)
+
+fast_downward_plugin(
+        NAME Max_Heuristic_P2
+        HELP "The Max heuristic P2"
+        SOURCES
+            heuristics/max_heuristic_p2
+        DEPENDS PRIORITY_QUEUES H2_HEURISTIC
 )
 
 fast_downward_plugin(

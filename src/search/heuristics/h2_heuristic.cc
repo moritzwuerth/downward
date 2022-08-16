@@ -4,6 +4,7 @@
 #include "../plugin.h"
 
 #include "../utils/logging.h"
+#include "strips_task.h"
 
 #include "../task_utils/task_properties.h"
 
@@ -11,7 +12,9 @@
 using namespace std;
 
 namespace h2_heuristic {
-    Proposition::Proposition()
+
+
+    /*Proposition::Proposition()
             : is_goal(false) {
     }
 
@@ -30,13 +33,14 @@ namespace h2_heuristic {
               del_effects(move(del_effects)),
               operator_no(operator_no),
               base_cost(base_cost) {
-    }
+    }*/
 
     H2Heuristic::H2Heuristic(const Options &opts)
-            : Heuristic(opts) {
+            : Heuristic(opts){
         if (log.is_at_least_normal()) {
             log << "Initializing h2 heuristic..." << endl;
         }
+        //strips_task::StripsTask stripsTask = strips_task::StripsTask(task_proxy);
         if (log.is_at_least_debug()) {
             log << "Original SAS+ task:" << endl;
             task_properties::dump_task(task_proxy);
@@ -60,6 +64,31 @@ namespace h2_heuristic {
             }
         }
 
+        //std::cout << propositions.size() << std::endl;
+        //strips_task::StripsTask stripsTask(task_proxy);
+        //stripsTask = strips_task::StripsTask(task_proxy);
+        //strips_task::StripsTask stripsTask =  strips_task::StripsTask(task_proxy);
+        //strips_task::StripsTask p2_stripsTask = stripsTask.build_p2_strips_task(stripsTask);
+        //std::cout << "<<<<<<<<<<<<<<<<>>>>><<<<<<<<<<<<>>>>>>>>><<<" << std::endl;
+        //unary_operators = stripsTask.unary_operators;
+        /*for (strips_task::UnaryOperator &unaryOperator : stripsTask.unary_operators){
+            std::cout << "-------------------------" << std::endl;
+
+            std::cout << unaryOperator.preconditions << std::endl;
+        }
+        strips_task::StripsTask p2_stripsTask = stripsTask.build_p2_strips_task(stripsTask);
+
+        std::cout << "<<<<<<<<<<<<<<<<>>>>><<<<<<<<<<<<>>>>>>>>><<<" << std::endl;
+
+        for (strips_task::UnaryOperator &unaryOperator : p2_stripsTask.unary_operators){
+            std::cout << "-------------------------" << std::endl;
+
+            std::cout << unaryOperator.preconditions << std::endl;
+            std::cout << unaryOperator.add_effect << std::endl;
+
+        }*/
+
+/*
         // Build propositions.
         propositions.resize(task_properties::get_num_facts(task_proxy));
         original_propIDs.reserve(propositions.size());
@@ -79,24 +108,7 @@ namespace h2_heuristic {
             }
         }
 
-        /*for (PropID propid: original_propIDs) {
-            std::cout << propid << std::endl;
-
-        }
-
-
-        for (int i = 0; i < 11; ++i) {
-            for (int j = i + 1; j < 12; ++j) {
-                std::cout << "first prop  " << i << "    second prop  " << j << "    "
-                          << prop_pairs[to_string(i)][to_string(j)] << "\n";
-
-            }
-
-        }*/
-
         propositions.resize(x);
-
-        //std::cout << "#Propositions--------------->" << propositions.size() << std::endl;
 
 
         // Build proposition offsets.
@@ -123,8 +135,8 @@ namespace h2_heuristic {
                 task_properties::get_num_total_effects(task_proxy));
         for (OperatorProxy op: task_proxy.get_operators())
             build_unary_operators(op);
-
-        if (log.is_at_least_debug()) {
+*/
+       /* if (log.is_at_least_debug()) {
             log << "Computed STRIPS task:" << endl;
             log << "Propositions:" << endl;
             for (const Proposition &prop: propositions) {
@@ -144,9 +156,9 @@ namespace h2_heuristic {
             }
         }
 
-    }
+    }*/
 
-    void H2Heuristic::build_unary_operators(const OperatorProxy &op) {
+    /*void H2Heuristic::build_unary_operators(const OperatorProxy &op) {
         int op_no = op.is_axiom() ? -1 : op.get_id();
         int base_cost = op.get_cost();
         vector <PropID> precondition_props;
@@ -159,7 +171,7 @@ namespace h2_heuristic {
         for (EffectProxy effect: op.get_effects()) {
             //vector <PropID> effects;
             //effects.push_back(get_prop_id(effect.get_fact()));
-            PropID effect_prop = get_prop_id(effect.get_fact());
+            //PropID effect_prop = get_prop_id(effect.get_fact());
             EffectConditionsProxy eff_conds = effect.get_conditions();
             precondition_props.reserve(preconditions.size() + eff_conds.size());
             for (FactProxy eff_cond: eff_conds) {
@@ -167,7 +179,9 @@ namespace h2_heuristic {
             }
 
             //create delete effects
-            int first_propId_var = get_prop_id(effect.get_fact().get_variable().get_fact(0));
+
+            //int first_propId_var = get_prop_id(effect.get_fact().get_variable().get_fact(0));
+            int first_propId_var = proposition_offsets[effect.get_fact().get_variable().get_id()];
             int var_domain_size = effect.get_fact().get_variable().get_domain_size();
             delcondition_prop.clear();
             delcondition_prop.reserve(var_domain_size - 1);
@@ -194,8 +208,12 @@ namespace h2_heuristic {
                 for (PropID propId2: precondition_props) {
                     if (propId1 > propId2) {
                         precondition_props_final.push_back(prop_pairs[to_string(propId2)][to_string(propId1)]);
+                        //precondition_props_final.push_back(prop_pairs2[propId2][propId1]);
+
                     } else {
                         precondition_props_final.push_back(prop_pairs[to_string(propId1)][to_string(propId2)]);
+
+
                     }
                 }
                 //add all pairs of the original preconditions
@@ -203,6 +221,8 @@ namespace h2_heuristic {
                     for (PropID propId2: precondition_props) {
                         if (propId1 < propId2) {
                             precondition_props_final.push_back(prop_pairs[to_string(propId1)][to_string(propId2)]);
+                            //precondition_props_final.push_back(prop_pairs2[propId1][propId2]);
+
                         }
                     }
                 }
@@ -212,8 +232,12 @@ namespace h2_heuristic {
                 effects.push_back(get_prop_id(effect.get_fact()));
                 if (get_prop_id(effect.get_fact()) < propId1) {
                     effects.push_back(prop_pairs[to_string(get_prop_id(effect.get_fact()))][to_string(propId1)]);
+                    //effects.push_back(prop_pairs2[get_prop_id(effect.get_fact())][propId1]);
+
                 } else {
                     effects.push_back(prop_pairs[to_string(propId1)][to_string(get_prop_id(effect.get_fact()))]);
+                    //effects.push_back(prop_pairs2[propId1][get_prop_id(effect.get_fact())]);
+
 
                 }
                 delcondition_prop.clear();
@@ -228,7 +252,7 @@ namespace h2_heuristic {
                                              del_effects_copy.size(), move(del_effects_copy), op_no, base_cost);
                 precondition_props.erase(precondition_props.end() - eff_conds.size(), precondition_props.end());
             }
-        }
+        }*/
     }
 
 
@@ -238,6 +262,9 @@ int H2Heuristic::compute_heuristic(const State &ancestor_state) {
     return 0;
 }
 
+
+
+/*
 PropID H2Heuristic::get_prop_id(int var, int value) const {
     return proposition_offsets[var] + value;
 }
@@ -257,7 +284,7 @@ Proposition *H2Heuristic::get_proposition(int var, int value) {
 
 Proposition *H2Heuristic::get_proposition(const FactProxy &fact) {
     return get_proposition(fact.get_variable().get_id(), fact.get_value());
-}
+}*/
 
 static shared_ptr<Heuristic> _parse(OptionParser &parser) {
     Heuristic::add_options_to_parser(parser);

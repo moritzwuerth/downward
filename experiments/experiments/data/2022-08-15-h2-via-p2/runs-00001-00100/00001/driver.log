@@ -1,0 +1,11 @@
+2022-08-17 15:11:39,152 INFO     node: moritz-X550VX
+2022-08-17 15:11:44,920 INFO     planner wall-clock time: 5.77s
+2022-08-17 15:11:44,920 INFO     planner exit code: 36
+2022-08-17 15:11:44,985 INFO     exitcode_parser wall-clock time: 0.06s
+2022-08-17 15:11:44,985 INFO     exitcode_parser exit code: 0
+2022-08-17 15:11:45,060 INFO     translator_parser wall-clock time: 0.07s
+2022-08-17 15:11:45,060 INFO     translator_parser exit code: 0
+2022-08-17 15:11:45,135 INFO     single_search_parser wall-clock time: 0.07s
+2022-08-17 15:11:45,135 INFO     single_search_parser exit code: 0
+2022-08-17 15:11:45,207 INFO     planner_parser wall-clock time: 0.07s
+2022-08-17 15:11:45,207 INFO     planner_parser exit code: 0

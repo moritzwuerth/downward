@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>2022-08-15-h2-via-p2-abs</title>
+<meta name="generator" content="https://txt2tags.org">
+<style type="text/css">
+blockquote{margin: 1em 2em; border-left: 2px solid #999;
+  font-style: oblique; padding-left: 1em;}
+blockquote:first-letter{margin: .2em .1em .1em 0; font-size: 160%; font-weight: bold;}
+blockquote:first-line{font-weight: bold;}
+body{font-family: sans-serif;}
+hr{background-color:#000;border:0;color:#000;}
+hr.heavy{height:2px;}
+hr.light{height:1px;}
+img{border:0;display:block;}
+img.right{margin:0 0 0 auto;}
+img.center{border:0;margin:0 auto;}
+table{border-collapse: collapse;}
+table th,table td{padding: 3px 7px 2px 7px;}
+table th{background-color: lightgrey;}
+table.center{margin-left:auto; margin-right:auto;}
+.center{text-align:center;}
+.right{text-align:right;}
+.left{text-align:left;}
+.tableborder,.tableborder td,.tableborder th{border:1px solid #000;}
+.underline{text-decoration:underline;}
+</style>
+<style type="text/css">
+    body {
+        font-family: Ubuntu, Helvetica, Arial, sans-serif;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    table th {
+        text-align: left;
+        padding-top: 5px;
+        padding-bottom: 4px;
+        background-color: #aaa;
+        color: #ffffff;
+    }
+</style>
+<script type="text/javascript">
+function toggle_element(element) {
+    if (element.style.display == "none") {
+        element.style.display = "";
+    } else {
+        element.style.display = "none";
+    }
+}
+
+function find_next(element, classname) {
+    element = element.nextSibling;
+    while(element.nodeName != classname)
+        element = element.nextSibling;
+    return element;
+}
+
+function toggle_table(toggle_button) {
+    var table = find_next(toggle_button, "TABLE");
+    toggle_element(table);
+    if (toggle_button.innerHTML == "Show table") {
+        toggle_button.innerHTML = "Hide table";
+    } else {
+        toggle_button.innerHTML = "Show table";
+    }
+}
+
+function show_table(section) {
+    heading = section.children[0];
+    var toggle_button = find_next(heading, "BUTTON");
+    var table = find_next(toggle_button, "TABLE");
+    table.style.display = "";
+    toggle_button.innerHTML = "Hide table";
+}
+
+function show_main_tables() {
+    var names = ["unexplained-errors", "info", "summary"];
+    for (var i = 0; i < names.length; i++) {
+        var section = document.getElementById(names[i]);
+        try {
+            show_table(section);
+        } catch (e) {
+            console.log("No table found for " + names[i]);
+        }
+    }
+
+    // If there is only one table, show it and hide the button.
+    var buttons = document.getElementsByTagName('button');
+    var tables = document.getElementsByTagName('table');
+    if (buttons.length == 1 && tables.length == 1) {
+        tables[0].style.display = "";
+        buttons[0].style.display = "none";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", show_main_tables);
+</script>
+</head>
+<body>
+<header>
+<hgroup>
+<h1>2022-08-15-h2-via-p2-abs</h1>
+<h3>2022-08-17</h3>
+</hgroup>
+</header>
+<article>
+
+<div class="body" id="body">
+
+<ul>
+<li><strong><a href="#unexplained-errors" onclick="show_table(document.getElementById('unexplained-errors'));">Unexplained Errors</a></strong>
+</li>
+<li><strong><a href="#info" onclick="show_table(document.getElementById('info'));">Info</a></strong>
+</li>
+<li><strong><a href="#summary" onclick="show_table(document.getElementById('summary'));">Summary</a></strong>
+</li>
+<li><strong><a href="#coverage" onclick="show_table(document.getElementById('coverage'));">coverage</a></strong>
+  <ul>
+  <li><a href="#coverage-depot" onclick="show_table(document.getElementById('coverage-depot'));">depot</a> <a href="#coverage-grid" onclick="show_table(document.getElementById('coverage-grid'));">grid</a> <a href="#coverage-gripper" onclick="show_table(document.getElementById('coverage-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#error" onclick="show_table(document.getElementById('error'));">error</a></strong>
+  <ul>
+  <li><a href="#error-error-driver-input-error" onclick="show_table(document.getElementById('error-error-driver-input-error'));">error-driver-input-error</a> <a href="#error-error-search-out-of-time" onclick="show_table(document.getElementById('error-error-search-out-of-time'));">error-search-out-of-time</a> <a href="#error-depot" onclick="show_table(document.getElementById('error-depot'));">depot</a> <a href="#error-grid" onclick="show_table(document.getElementById('error-grid'));">grid</a> <a href="#error-gripper" onclick="show_table(document.getElementById('error-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#expansions" onclick="show_table(document.getElementById('expansions'));">expansions</a></strong>
+  <ul>
+  <li><a href="#expansions-depot" onclick="show_table(document.getElementById('expansions-depot'));">depot</a> <a href="#expansions-grid" onclick="show_table(document.getElementById('expansions-grid'));">grid</a> <a href="#expansions-gripper" onclick="show_table(document.getElementById('expansions-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#expansions_until_last_jump" onclick="show_table(document.getElementById('expansions_until_last_jump'));">expansions_until_last_jump</a></strong>
+  <ul>
+  <li><a href="#expansions_until_last_jump-depot" onclick="show_table(document.getElementById('expansions_until_last_jump-depot'));">depot</a> <a href="#expansions_until_last_jump-grid" onclick="show_table(document.getElementById('expansions_until_last_jump-grid'));">grid</a> <a href="#expansions_until_last_jump-gripper" onclick="show_table(document.getElementById('expansions_until_last_jump-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#initial_h_value" onclick="show_table(document.getElementById('initial_h_value'));">initial_h_value</a></strong>
+  <ul>
+  <li><a href="#initial_h_value-depot" onclick="show_table(document.getElementById('initial_h_value-depot'));">depot</a> <a href="#initial_h_value-grid" onclick="show_table(document.getElementById('initial_h_value-grid'));">grid</a> <a href="#initial_h_value-gripper" onclick="show_table(document.getElementById('initial_h_value-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#memory" onclick="show_table(document.getElementById('memory'));">memory</a></strong>
+  <ul>
+  <li><a href="#memory-depot" onclick="show_table(document.getElementById('memory-depot'));">depot</a> <a href="#memory-grid" onclick="show_table(document.getElementById('memory-grid'));">grid</a> <a href="#memory-gripper" onclick="show_table(document.getElementById('memory-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#run_dir" onclick="show_table(document.getElementById('run_dir'));">run_dir</a></strong>
+  <ul>
+  <li><a href="#run_dir-depot" onclick="show_table(document.getElementById('run_dir-depot'));">depot</a> <a href="#run_dir-grid" onclick="show_table(document.getElementById('run_dir-grid'));">grid</a> <a href="#run_dir-gripper" onclick="show_table(document.getElementById('run_dir-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#search_time" onclick="show_table(document.getElementById('search_time'));">search_time</a></strong>
+  <ul>
+  <li><a href="#search_time-depot" onclick="show_table(document.getElementById('search_time-depot'));">depot</a> <a href="#search_time-grid" onclick="show_table(document.getElementById('search_time-grid'));">grid</a> <a href="#search_time-gripper" onclick="show_table(document.getElementById('search_time-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+<li><strong><a href="#total_time" onclick="show_table(document.getElementById('total_time'));">total_time</a></strong>
+  <ul>
+  <li><a href="#total_time-depot" onclick="show_table(document.getElementById('total_time-depot'));">depot</a> <a href="#total_time-grid" onclick="show_table(document.getElementById('total_time-grid'));">grid</a> <a href="#total_time-gripper" onclick="show_table(document.getElementById('total_time-gripper'));">gripper</a>
+  </li>
+  </ul>
+</li>
+</ul>
+
+<section~A~>
+<h1></h1>
+<section id="unexplained-errors">
+<h2>unexplained-errors</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>Unexplained errors</th>
+<th>domain</th>
+<th>problem</th>
+<th>algorithm</th>
+<th>unexplained_<wbr>errors</th>
+<th>error</th>
+<th>planner_<wbr>wall_<wbr>clock_<wbr>time</th>
+<th>raw_<wbr>memory</th>
+<th>node</th>
+</tr>
+<tr>
+<td>runs-00001-00100/00001</td>
+<td>depot</td>
+<td>p01.pddl</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</td>
+<td>['driver-input-error',&nbsp;'run.err:&nbsp;Error:&nbsp;validate&nbsp;not&nbsp;found.&nbsp;Is&nbsp;it&nbsp;on&nbsp;the&nbsp;PATH?<br />']</td>
+<td>driver-input-error</td>
+<td class="right">5.77</td>
+<td class="right">22996</td>
+<td>moritz-X550VX</td>
+</tr>
+<tr>
+<td>runs-00001-00100/00003</td>
+<td>gripper</td>
+<td>prob01.pddl</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</td>
+<td>['driver-input-error',&nbsp;'run.err:&nbsp;Error:&nbsp;validate&nbsp;not&nbsp;found.&nbsp;Is&nbsp;it&nbsp;on&nbsp;the&nbsp;PATH?<br />']</td>
+<td>driver-input-error</td>
+<td class="right">1.18</td>
+<td class="right">22864</td>
+<td>moritz-X550VX</td>
+</tr>
+<tr>
+<td>runs-00001-00100/00004</td>
+<td>depot</td>
+<td>p01.pddl</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</td>
+<td>['driver-input-error',&nbsp;'run.err:&nbsp;Error:&nbsp;validate&nbsp;not&nbsp;found.&nbsp;Is&nbsp;it&nbsp;on&nbsp;the&nbsp;PATH?<br />']</td>
+<td>driver-input-error</td>
+<td class="right">0.29</td>
+<td class="right">37540</td>
+<td>moritz-X550VX</td>
+</tr>
+<tr>
+<td>runs-00001-00100/00005</td>
+<td>grid</td>
+<td>prob01.pddl</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</td>
+<td>['driver-input-error',&nbsp;'run.err:&nbsp;Error:&nbsp;validate&nbsp;not&nbsp;found.&nbsp;Is&nbsp;it&nbsp;on&nbsp;the&nbsp;PATH?<br />']</td>
+<td>driver-input-error</td>
+<td class="right">6.39</td>
+<td class="right">1564428</td>
+<td>moritz-X550VX</td>
+</tr>
+<tr>
+<td>runs-00001-00100/00006</td>
+<td>gripper</td>
+<td>prob01.pddl</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</td>
+<td>['driver-input-error',&nbsp;'run.err:&nbsp;Error:&nbsp;validate&nbsp;not&nbsp;found.&nbsp;Is&nbsp;it&nbsp;on&nbsp;the&nbsp;PATH?<br />']</td>
+<td>driver-input-error</td>
+<td class="right">0.16</td>
+<td class="right">24364</td>
+<td>moritz-X550VX</td>
+</tr>
+</table>
+
+</section>
+<section id="info">
+<h2>info</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>algorithm</th>
+<th>local_<wbr>revision</th>
+<th>global_<wbr>revision</th>
+<th>driver_<wbr>options</th>
+<th>component_<wbr>options</th>
+</tr>
+<tr>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2</td>
+<td>['--validate', '--overall-time-limit', '30m', '--overall-memory-limit', '3584M', '--overall-time-limit', '5m']</td>
+<td>['--search', 'astar(hm(2))']</td>
+</tr>
+<tr>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2</td>
+<td>b3ad9ab5d9818ae093a306e51473012689b740b2</td>
+<td>['--validate', '--overall-time-limit', '30m', '--overall-memory-limit', '3584M', '--overall-time-limit', '5m']</td>
+<td>['--search', 'astar(eval=hmax_p2())']</td>
+</tr>
+</table>
+
+<p>
+Used nodes: {moritz-X550VX}
+</p>
+
+</section>
+<section id="summary">
+<h2>summary</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>Summary</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#coverage" onclick="show_table(document.getElementById('coverage'));">coverage - Sum</a></td>
+<td class="right"><span style="color:rgb(0,0,178)">2</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">3</span></td>
+</tr>
+<tr>
+<td><a href="#error-error-driver-input-error" onclick="show_table(document.getElementById('error-error-driver-input-error'));">error-driver-input-error - Sum</a></td>
+<td class="right"><span style="color:rgb(0,178,0)">2</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">3</span></td>
+</tr>
+<tr>
+<td><a href="#error-error-search-out-of-time" onclick="show_table(document.getElementById('error-error-search-out-of-time'));">error-search-out-of-time - Sum</a></td>
+<td class="right"><span style="color:rgb(0,0,178)">1</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0</span></td>
+</tr>
+<tr>
+<td><a href="#expansions" onclick="show_table(document.getElementById('expansions'));">expansions - Geometric mean</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">52.54</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">52.54</span></td>
+</tr>
+<tr>
+<td><a href="#expansions_until_last_jump" onclick="show_table(document.getElementById('expansions_until_last_jump'));">expansions_until_last_jump - Sum</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">125</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">125</span></td>
+</tr>
+<tr>
+<td><a href="#initial_h_value" onclick="show_table(document.getElementById('initial_h_value'));">initial_h_value - Finite sum</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">26</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">26</span></td>
+</tr>
+<tr>
+<td><a href="#memory" onclick="show_table(document.getElementById('memory'));">memory - Sum</a></td>
+<td class="right"><span style="color:rgb(0,178,0)">45860</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">61904</span></td>
+</tr>
+<tr>
+<td><a href="#search_time" onclick="show_table(document.getElementById('search_time'));">search_time - Geometric mean</a></td>
+<td class="right"><span style="color:rgb(0,0,178)">2.41</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.04</span></td>
+</tr>
+<tr>
+<td><a href="#total_time" onclick="show_table(document.getElementById('total_time'));">total_time - Geometric mean</a></td>
+<td class="right"><span style="color:rgb(0,0,178)">2.41</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.05</span></td>
+</tr>
+</table>
+
+</section>
+<section id="coverage">
+<h2>coverage</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>coverage</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#coverage-depot" onclick="show_table(document.getElementById('coverage-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+<tr>
+<td><a href="#coverage-grid" onclick="show_table(document.getElementById('coverage-grid'));">grid</a> (1)</td>
+<td class="right"><span style="color:rgb(0,0,178)">0</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">1</span></td>
+</tr>
+<tr>
+<td><a href="#coverage-gripper" onclick="show_table(document.getElementById('coverage-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+<tr>
+<td><strong>Sum (3)</strong></td>
+<td class="right"><span style="color:rgb(0,0,178)">2</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">3</span></td>
+</tr>
+</table>
+
+<p>
+The bottom row reports the sum across all domains.
+</p>
+
+<section id="coverage-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>coverage</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+</table>
+
+</section>
+<section id="coverage-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>coverage</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(0,0,178)">0</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">1</span></td>
+</tr>
+</table>
+
+</section>
+<section id="coverage-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>coverage</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="error">
+<h2>error</h2>
+
+<section id="error-error-driver-input-error">
+<h3>error-driver-input-error</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>error-driver-input-error</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#error-depot" onclick="show_table(document.getElementById('error-depot'));">depot</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+<tr>
+<td><a href="#error-grid" onclick="show_table(document.getElementById('error-grid'));">grid</a></td>
+<td class="right"><span style="color:rgb(0,178,0)">0</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">1</span></td>
+</tr>
+<tr>
+<td><a href="#error-gripper" onclick="show_table(document.getElementById('error-gripper'));">gripper</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">1</span></td>
+</tr>
+<tr>
+<td><strong>Sum</strong></td>
+<td class="right"><span style="color:rgb(0,178,0)">2</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">3</span></td>
+</tr>
+</table>
+
+</section>
+<section id="error-error-search-out-of-time">
+<h3>error-search-out-of-time</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>error-search-out-of-time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#error-depot" onclick="show_table(document.getElementById('error-depot'));">depot</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">0</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">0</span></td>
+</tr>
+<tr>
+<td><a href="#error-grid" onclick="show_table(document.getElementById('error-grid'));">grid</a></td>
+<td class="right"><span style="color:rgb(0,0,178)">1</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0</span></td>
+</tr>
+<tr>
+<td><a href="#error-gripper" onclick="show_table(document.getElementById('error-gripper'));">gripper</a></td>
+<td class="right"><span style="color:rgb(127,127,127)">0</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">0</span></td>
+</tr>
+<tr>
+<td><strong>Sum</strong></td>
+<td class="right"><span style="color:rgb(0,0,178)">1</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0</span></td>
+</tr>
+</table>
+
+</section>
+<section id="error-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>error</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td>driver-input-error</td>
+<td>driver-input-error</td>
+</tr>
+</table>
+
+</section>
+<section id="error-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>error</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td>search-out-of-time</td>
+<td>driver-input-error</td>
+</tr>
+</table>
+
+</section>
+<section id="error-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>error</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td>driver-input-error</td>
+<td>driver-input-error</td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="expansions">
+<h2>expansions</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#expansions-depot" onclick="show_table(document.getElementById('expansions-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">24.00</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">24.00</span></td>
+</tr>
+<tr>
+<td><a href="#expansions-grid" onclick="show_table(document.getElementById('expansions-grid'));">grid</a> (0)</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+</tr>
+<tr>
+<td><a href="#expansions-gripper" onclick="show_table(document.getElementById('expansions-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">115.00</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">115.00</span></td>
+</tr>
+<tr>
+<td><strong>Geometric mean (2)</strong></td>
+<td class="right"><span style="color:rgb(127,127,127)">52.54</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">52.54</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "expansions" are considered. Each table entry gives the geometric mean of "expansions" for that domain. The bottom row reports the geometric mean across all domains.
+</p>
+
+<section id="expansions-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">24</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">24</span></td>
+</tr>
+</table>
+
+</section>
+<section id="expansions-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">15</span></td>
+</tr>
+</table>
+
+</section>
+<section id="expansions-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">115</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">115</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="expansions_until_last_jump">
+<h2>expansions_until_last_jump</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions_<wbr>until_<wbr>last_<wbr>jump</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#expansions_until_last_jump-depot" onclick="show_table(document.getElementById('expansions_until_last_jump-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">15</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">15</span></td>
+</tr>
+<tr>
+<td><a href="#expansions_until_last_jump-grid" onclick="show_table(document.getElementById('expansions_until_last_jump-grid'));">grid</a> (0)</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+</tr>
+<tr>
+<td><a href="#expansions_until_last_jump-gripper" onclick="show_table(document.getElementById('expansions_until_last_jump-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">110</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">110</span></td>
+</tr>
+<tr>
+<td><strong>Sum (2)</strong></td>
+<td class="right"><span style="color:rgb(127,127,127)">125</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">125</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "expansions_until_last_jump" are considered. Each table entry gives the sum of "expansions_until_last_jump" for that domain. The bottom row reports the sum across all domains.
+</p>
+
+<section id="expansions_until_last_jump-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions_<wbr>until_<wbr>last_<wbr>jump</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">15</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">15</span></td>
+</tr>
+</table>
+
+</section>
+<section id="expansions_until_last_jump-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions_<wbr>until_<wbr>last_<wbr>jump</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0</span></td>
+</tr>
+</table>
+
+</section>
+<section id="expansions_until_last_jump-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>expansions_<wbr>until_<wbr>last_<wbr>jump</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">110</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">110</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="initial_h_value">
+<h2>initial_h_value</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>initial_<wbr>h_<wbr>value</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#initial_h_value-depot" onclick="show_table(document.getElementById('initial_h_value-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">8</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">8</span></td>
+</tr>
+<tr>
+<td><a href="#initial_h_value-grid" onclick="show_table(document.getElementById('initial_h_value-grid'));">grid</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">14</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">14</span></td>
+</tr>
+<tr>
+<td><a href="#initial_h_value-gripper" onclick="show_table(document.getElementById('initial_h_value-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(127,127,127)">4</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">4</span></td>
+</tr>
+<tr>
+<td><strong>Finite sum (3)</strong></td>
+<td class="right"><span style="color:rgb(127,127,127)">26</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">26</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "initial_h_value" are considered. Each table entry gives the finite sum of "initial_h_value" for that domain. The bottom row reports the finite sum across all domains.
+</p>
+
+<section id="initial_h_value-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>initial_<wbr>h_<wbr>value</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">8</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">8</span></td>
+</tr>
+</table>
+
+</section>
+<section id="initial_h_value-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>initial_<wbr>h_<wbr>value</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">14</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">14</span></td>
+</tr>
+</table>
+
+</section>
+<section id="initial_h_value-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>initial_<wbr>h_<wbr>value</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">4</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">4</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="memory">
+<h2>memory</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>memory</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#memory-depot" onclick="show_table(document.getElementById('memory-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(0,178,0)">22996</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">37540</span></td>
+</tr>
+<tr>
+<td><a href="#memory-grid" onclick="show_table(document.getElementById('memory-grid'));">grid</a> (0)</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+</tr>
+<tr>
+<td><a href="#memory-gripper" onclick="show_table(document.getElementById('memory-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(0,178,0)">22864</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">24364</span></td>
+</tr>
+<tr>
+<td><strong>Sum (2)</strong></td>
+<td class="right"><span style="color:rgb(0,178,0)">45860</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">61904</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "memory" are considered. Each table entry gives the sum of "memory" for that domain. The bottom row reports the sum across all domains.
+</p>
+
+<section id="memory-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>memory</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(0,178,0)">22996</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">37540</span></td>
+</tr>
+</table>
+
+</section>
+<section id="memory-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>memory</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">1564428</span></td>
+</tr>
+</table>
+
+</section>
+<section id="memory-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>memory</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(0,178,0)">22864</span></td>
+<td class="right"><span style="color:rgb(0,0,178)">24364</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="run_dir">
+<h2>run_dir</h2>
+
+<p>
+Per-domain reports only support numeric attributes, but run_dir has type str.
+</p>
+
+<section id="run_dir-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>run_<wbr>dir</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td>runs-00001-00100/00001</td>
+<td>runs-00001-00100/00004</td>
+</tr>
+</table>
+
+</section>
+<section id="run_dir-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>run_<wbr>dir</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td>runs-00001-00100/00002</td>
+<td>runs-00001-00100/00005</td>
+</tr>
+</table>
+
+</section>
+<section id="run_dir-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>run_<wbr>dir</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td>runs-00001-00100/00003</td>
+<td>runs-00001-00100/00006</td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="search_time">
+<h2>search_time</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>search_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#search_time-depot" onclick="show_table(document.getElementById('search_time-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(0,0,178)">5.60</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.09</span></td>
+</tr>
+<tr>
+<td><a href="#search_time-grid" onclick="show_table(document.getElementById('search_time-grid'));">grid</a> (0)</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+</tr>
+<tr>
+<td><a href="#search_time-gripper" onclick="show_table(document.getElementById('search_time-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(0,0,178)">1.03</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.01</span></td>
+</tr>
+<tr>
+<td><strong>Geometric mean (2)</strong></td>
+<td class="right"><span style="color:rgb(0,0,178)">2.41</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.04</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "search_time" are considered. Each table entry gives the geometric mean of "search_time" for that domain. The bottom row reports the geometric mean across all domains.
+</p>
+
+<section id="search_time-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>search_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(0,0,178)">5.60</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.09</span></td>
+</tr>
+</table>
+
+</section>
+<section id="search_time-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>search_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">4.04</span></td>
+</tr>
+</table>
+
+</section>
+<section id="search_time-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>search_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(0,0,178)">1.03</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.01</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+<section id="total_time">
+<h2>total_time</h2>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>total_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td><a href="#total_time-depot" onclick="show_table(document.getElementById('total_time-depot'));">depot</a> (1)</td>
+<td class="right"><span style="color:rgb(0,0,178)">5.60</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.12</span></td>
+</tr>
+<tr>
+<td><a href="#total_time-grid" onclick="show_table(document.getElementById('total_time-grid'));">grid</a> (0)</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+</tr>
+<tr>
+<td><a href="#total_time-gripper" onclick="show_table(document.getElementById('total_time-gripper'));">gripper</a> (1)</td>
+<td class="right"><span style="color:rgb(0,0,178)">1.04</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.02</span></td>
+</tr>
+<tr>
+<td><strong>Geometric mean (2)</strong></td>
+<td class="right"><span style="color:rgb(0,0,178)">2.41</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.05</span></td>
+</tr>
+</table>
+
+<p>
+Only tasks where all algorithms have a value for "total_time" are considered. Each table entry gives the geometric mean of "total_time" for that domain. The bottom row reports the geometric mean across all domains.
+</p>
+
+<section id="total_time-depot">
+<h3>depot</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>total_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>p01.pddl</td>
+<td class="right"><span style="color:rgb(0,0,178)">5.60</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.12</span></td>
+</tr>
+</table>
+
+</section>
+<section id="total_time-grid">
+<h3>grid</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>total_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(127,127,127)">None</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">5.86</span></td>
+</tr>
+</table>
+
+</section>
+<section id="total_time-gripper">
+<h3>gripper</h3>
+
+<button type="button" class="toggle-table" onclick="toggle_table(this)">Show table</button><p></p>
+
+<table class="tableborder" style="display:none">
+<tr>
+<th>total_<wbr>time</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default</th>
+<th>b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2</th>
+</tr>
+<tr>
+<td>prob01.pddl</td>
+<td class="right"><span style="color:rgb(0,0,178)">1.04</span></td>
+<td class="right"><span style="color:rgb(0,178,0)">0.02</span></td>
+</tr>
+</table>
+
+</section>
+</section>
+</section>
+</div>
+</article></body></html>

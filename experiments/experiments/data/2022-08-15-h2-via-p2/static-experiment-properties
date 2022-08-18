@@ -1,0 +1,15 @@
+{
+  "algorithms": [
+    "b3ad9ab5d9818ae093a306e51473012689b740b2-h2-default",
+    "b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2"
+  ],
+  "experiment_file": "2022-08-15-h2-via-p2.py",
+  "runs": 6,
+  "suite": {
+    "/home/moritz/Schreibtisch/H2_Heuristic/benchmarks": [
+      "depot:p01.pddl",
+      "grid:prob01.pddl",
+      "gripper:prob01.pddl"
+    ]
+  }
+}

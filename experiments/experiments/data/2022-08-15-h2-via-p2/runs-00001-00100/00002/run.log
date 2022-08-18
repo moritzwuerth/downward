@@ -1,0 +1,109 @@
+INFO     planner time limit: 300s
+INFO     planner memory limit: 3584 MB
+
+INFO     Running translator.
+INFO     translator stdin: None
+INFO     translator time limit: 299.96s
+INFO     translator memory limit: 3584 MB
+INFO     translator command line string: /home/moritz/Schreibtisch/H2_Heuristic/downward/experiments/experiments/.venv/bin/python3 /home/moritz/Schreibtisch/H2_Heuristic/downward/experiments/experiments/data/2022-08-15-h2-via-p2/code-b3ad9ab5d9818ae093a306e51473012689b740b2_e5e41175/builds/release/bin/translate/translate.py domain.pddl problem.pddl --sas-file output.sas
+Parsing...
+Parsing: [0.000s CPU, 0.002s wall-clock]
+Normalizing task... [0.000s CPU, 0.000s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.001s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.000s CPU, 0.002s wall-clock]
+Preparing model... [0.000s CPU, 0.002s wall-clock]
+Generated 46 rules.
+Computing model... [0.040s CPU, 0.038s wall-clock]
+3114 relevant atoms
+1522 auxiliary atoms
+4636 final queue length
+9238 total queue pushes
+Completing instantiation... [0.100s CPU, 0.105s wall-clock]
+Instantiating: [0.150s CPU, 0.149s wall-clock]
+Computing fact groups...
+Finding invariants...
+12 initial candidates
+Finding invariants: [0.010s CPU, 0.003s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.001s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+1 uncovered facts
+Choosing groups: [0.000s CPU, 0.001s wall-clock]
+Building translation key... [0.000s CPU, 0.000s wall-clock]
+Computing fact groups: [0.010s CPU, 0.007s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Translator axioms removed by simplifying: 0
+Computing negative axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.005s wall-clock]
+Translating task: [0.090s CPU, 0.090s wall-clock]
+225 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+69 propositions removed
+Detecting unreachable propositions: [0.040s CPU, 0.039s wall-clock]
+Reordering and filtering variables...
+19 of 19 variables necessary.
+1 of 19 mutex groups necessary.
+2384 of 2384 operators necessary.
+0 of 0 axiom rules necessary.
+Reordering and filtering variables: [0.010s CPU, 0.011s wall-clock]
+Translator variables: 19
+Translator derived variables: 0
+Translator facts: 277
+Translator goal facts: 1
+Translator mutex groups: 1
+Translator total mutex groups size: 10
+Translator operators: 2384
+Translator axioms: 0
+Translator task size: 14119
+Translator peak memory: 52064 KB
+Writing output... [0.020s CPU, 0.023s wall-clock]
+Done! [0.320s CPU, 0.326s wall-clock]
+translate exit code: 0
+
+INFO     Running search (release).
+INFO     search stdin: output.sas
+INFO     search time limit: 299.59s
+INFO     search memory limit: 3584 MB
+INFO     search command line string: /home/moritz/Schreibtisch/H2_Heuristic/downward/experiments/experiments/data/2022-08-15-h2-via-p2/code-b3ad9ab5d9818ae093a306e51473012689b740b2_e5e41175/builds/release/bin/downward --search 'astar(hm(2))' --internal-plan-file sas_plan < output.sas
+[t=3.1654e-05s, 22476 KB] reading input...
+[t=0.00831427s, 23088 KB] done reading input!
+[t=0.00955661s, 23484 KB] Using h^2.
+[t=0.00959858s, 23484 KB] The implementation of the h^m heuristic is preliminary.
+[t=0.0096178s, 23484 KB] It is SLOOOOOOOOOOOW.
+[t=0.00963433s, 23484 KB] Please do not use this for comparison!
+[t=0.0198533s, 27312 KB] Building successor generator...done!
+[t=0.0209856s, 27688 KB] peak memory difference for successor generator creation: 376 KB
+[t=0.0210023s, 27688 KB] time for successor generation creation: 0.00102346s
+[t=0.0210431s, 27688 KB] Variables: 19
+[t=0.0210623s, 27688 KB] FactPairs: 277
+[t=0.0210761s, 27688 KB] Bytes per state: 8
+[t=0.0211801s, 27688 KB] Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+[t=71.0505s, 27688 KB] New best heuristic value for hm(2): 14
+[t=71.0506s, 27688 KB] g=0, 1 evaluated, 0 expanded
+[t=71.0506s, 27688 KB] f = 14, 1 evaluated, 0 expanded
+[t=71.0506s, 27688 KB] Initial heuristic value for hm(2): 14
+[t=71.0506s, 27688 KB] pruning method: none
+[t=145.475s, 27688 KB] New best heuristic value for hm(2): 13
+[t=145.475s, 27688 KB] g=1, 2 evaluated, 1 expanded
+[t=218.061s, 27688 KB] New best heuristic value for hm(2): 12
+[t=218.061s, 27688 KB] g=2, 3 evaluated, 2 expanded
+Peak memory: 27688 KB
+caught signal 24 -- exiting
+Time limit has been reached.
+Remove intermediate file output.sas
+search exit code: 23
+
+Driver aborting after search
+INFO     Planner time: 3e+02s

@@ -1,0 +1,29 @@
+{
+  "algorithm": "b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2",
+  "build_options": [],
+  "component_options": [
+    "--search",
+    "astar(eval=hmax_p2())"
+  ],
+  "domain": "grid",
+  "driver_options": [
+    "--validate",
+    "--overall-time-limit",
+    "30m",
+    "--overall-memory-limit",
+    "3584M",
+    "--overall-time-limit",
+    "5m"
+  ],
+  "experiment_name": "2022-08-15-h2-via-p2",
+  "global_revision": "b3ad9ab5d9818ae093a306e51473012689b740b2",
+  "id": [
+    "b3ad9ab5d9818ae093a306e51473012689b740b2-h2-via-p2",
+    "grid",
+    "prob01.pddl"
+  ],
+  "local_revision": "b3ad9ab5d9818ae093a306e51473012689b740b2",
+  "problem": "prob01.pddl",
+  "repo": "/home/moritz/Schreibtisch/H2_Heuristic/downward",
+  "run_dir": "runs-00001-00100/00005"
+}

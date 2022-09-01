@@ -309,6 +309,67 @@ namespace strips_task{
         return unary_operators[opId].preconditions;
     }
 
+    void StripsTask::unaryoperator_exchanging_roles(){
+
+        vector<PropID> temp_precondition;
+        for (UnaryOperator &unaryOperator: unary_operators) {
+            temp_precondition = unaryOperator.preconditions;
+            unaryOperator.preconditions = unaryOperator.del_effects;
+            unaryOperator.del_effects = temp_precondition;
+        }
+    }
+
+    void StripsTask::dual_goal(State &state) {
+        vector <PropID> new_goal_propositions;
+
+        vector<PropID> old_initial_propIds;
+        vector<PropID> all_propIds;
+        for (FactProxy fact: state) {
+            old_initial_propIds.push_back(get_prop_id(fact));
+        }
+        for (Proposition &proposition: propositions){
+            all_propIds.push_back(get_prop_id(proposition));
+        }
+
+        for (PropID &propId: all_propIds) {
+            if (std::find(old_initial_propIds.begin(), old_initial_propIds.end(), propId) != old_initial_propIds.end()) {
+            } else {
+                new_goal_propositions.push_back(propId);
+            }
+        }
+
+        goal_propositions = new_goal_propositions;
+    }
+
+
+    vector<PropID> StripsTask::dual_initial_state() {
+        vector<PropID> new_initial_propIds;
+
+        for (Proposition &proposition : propositions) {
+            if (std::find(old_goal_propositions.begin(), old_goal_propositions.end(), get_prop_id(proposition)) != old_goal_propositions.end()) {
+            } else {
+                new_initial_propIds.push_back(get_prop_id(proposition));
+            }
+        }
+        return new_initial_propIds;
+
+    }
+
+    void StripsTask::build_dual_pairs() {
+        prop_pairs2.resize(propositions.size(), vector<PropID>(propositions.size()));
+        original_propIDs.resize(propositions.size());
+        for (Proposition &prop: propositions) {
+
+            //std::numeric_limits<int>::max() does not work, otherwise a minus value appears, therefore a random high value;
+            original_propIDs[get_prop_id(prop)] =  1000000;
+
+            for (Proposition &prop2: propositions) {
+                if (get_prop_id(prop) < get_prop_id(prop2)) {
+                    prop_pairs2[get_prop_id(prop)][get_prop_id(prop2)] = 1000000;
+                }
+            }
+        }
+    }
 }
 
 

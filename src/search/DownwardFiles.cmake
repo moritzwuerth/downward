@@ -554,6 +554,14 @@ fast_downward_plugin(
 )
 
 fast_downward_plugin(
+        NAME Dual_Heuristic
+        HELP "The Dual heuristic"
+        SOURCES
+        heuristics/duality
+        DEPENDS PRIORITY_QUEUES H2_HEURISTIC
+)
+
+fast_downward_plugin(
     NAME HM_HEURISTIC
     HELP "The h^m heuristic"
     SOURCES

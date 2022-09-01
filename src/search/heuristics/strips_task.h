@@ -60,10 +60,12 @@ public:
     std::vector<UnaryOperator> unary_operators;
     std::vector<Proposition> propositions;
     std::vector<PropID> goal_propositions;
+    std::vector<PropID> old_goal_propositions;
+
     std::unordered_map<std::string,std::unordered_map<std::string, int>> prop_pairs;
     Prop_Original_Size original_size;
     std::vector<PropID> original_propIDs;
-    std::vector<std::vector<PropID>> prop_pairs2;
+    std::vector<std::vector<int>> prop_pairs2;
 
     array_pool::ArrayPool preconditions_pool;
     array_pool::ArrayPool precondition_of_pool;
@@ -126,7 +128,16 @@ public:
 
     std::vector<PropID> get_preconditions(OpID &opId);
 
-};
+    void unaryoperator_exchanging_roles();
+
+    void dual_goal(State &state);
+
+    std::vector<PropID> dual_initial_state();
+
+    void build_dual_pairs();
+
+
+    };
 }
 
 #endif

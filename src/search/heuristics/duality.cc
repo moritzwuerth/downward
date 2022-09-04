@@ -17,133 +17,152 @@ namespace dual {
             : Heuristic(opts) {
 
         //build strips_task
-        strips_Task = strips_task::StripsTask(task_proxy);
+        stripsTask = strips_task::Normal_Stripstask(task_proxy);
+        dual_StripsTask = strips_task::Dual_StripsTask(stripsTask);
+        setup_initial_state();
 
-        //swaps pre and del in the operators
-        strips_Task.unaryoperator_exchanging_roles();
+        relaxed_exploration();
 
-        //makes dual initial and goal state
-        strips_Task.old_goal_propositions = strips_Task.goal_propositions;
-        State state = task_proxy.get_initial_state();
-        strips_Task.dual_goal(state);
-
-        strips_Task.build_dual_pairs();
 
     }
     void Duality::setup_initial_state() {
-        vector<PropID> initial_propIds = strips_Task.dual_initial_state();
 
-        for (PropID &propId : initial_propIds){
-            strips_Task.original_propIDs[propId] = 0;
+        for (PropID &propId : dual_StripsTask.initial_propositions){
+            dual_StripsTask.h_value_for_single_propId[propId] = 0;
 
-            for (PropID &propId2 : initial_propIds) {
+            for (PropID &propId2 : dual_StripsTask.initial_propositions) {
                 if (propId < propId2) {
-                    strips_Task.prop_pairs2[propId][propId2] = 0;
+                    dual_StripsTask.h_value_for_pair[propId][propId2] = 0;
                 }
             }
         }
     }
-
+//TODO rekursiv, dass will ich noch machen
     void Duality::relaxed_exploration() {
-
-
-        //sets value for individual variables
-        for (int i = 0; i < strips_Task.original_propIDs.size(); ++i) {
-
-            //goes through all operators
-            for (UnaryOperator &unaryOperator: strips_Task.unary_operators) {
-
-                //checks if delete effect is present
-                if (std::find(unaryOperator.del_effects.begin(), unaryOperator.del_effects.end(),
-                              i) != unaryOperator.del_effects.end()) {
-                } else {
-                    //an add effect must be present
-                    if (unaryOperator.add_effect[0] == i) {
-                        vector <PropID> temp{i};
-
-                        //operator is used (regression)
-                        temp.erase(std::remove(temp.begin(), temp.end(), unaryOperator.add_effect[0]), temp.end());
-                        temp.reserve((unaryOperator.preconditions.size()));
-                        temp.insert(temp.end(), unaryOperator.preconditions.begin(),
-                                    unaryOperator.preconditions.end());
-                        utils::sort_unique(temp);
-
-                        //takes min with temp.size() <= 2. with more it takes max
-                        int cost = 0;
-                        if (temp.size() == 1) {
-                            cost = strips_Task.original_propIDs[temp[0]];
-                        } else if (temp.size() == 2) {
-                            cost = strips_Task.prop_pairs2[temp[0]][temp[1]];
-                        }else if (temp.size() < 1){
-                            continue;
-                        } else {
-                            for (PropID propId: temp) {
-                                if (cost < strips_Task.original_propIDs[propId])
-                                    cost = strips_Task.original_propIDs[propId];
-                                for (PropID propId1: temp) {
-                                    if (propId < propId1 && cost < strips_Task.prop_pairs2[propId][propId1]) {
-                                        cost = strips_Task.prop_pairs2[propId][propId1];
-                                    }
-                                }
-                            }
-                        }
-                        //takes the min for all operators
-                        cost = cost + unaryOperator.base_cost;
-                        if (cost < strips_Task.original_propIDs[i]) {
-                            strips_Task.original_propIDs[i] = cost;
-                        }
-                    }
-                }
-            }
-            //sets value for pair of variables
-            for (int j = i + 1; j < strips_Task.original_propIDs.size(); ++j) {
+        bool changed = true;
+        while (changed) {
+            changed = false;
+            //sets value for individual variables
+            for (int i = 0; i < dual_StripsTask.h_value_for_single_propId.size(); ++i) {
 
                 //goes through all operators
-                for (UnaryOperator &unaryOperator: strips_Task.unary_operators) {
+                for (UnaryOperator &unaryOperator: dual_StripsTask.unary_operators) {
+
                     //checks if delete effect is present
                     if (std::find(unaryOperator.del_effects.begin(), unaryOperator.del_effects.end(),
-                                  i) != unaryOperator.del_effects.end()||
-                            std::find(unaryOperator.del_effects.begin(), unaryOperator.del_effects.end(),
-                                      j) != unaryOperator.del_effects.end()) {
+                                  i) != unaryOperator.del_effects.end()) {
+
                     } else {
-                        //an add effect must be present
-                        if (unaryOperator.add_effect[0] == i || unaryOperator.add_effect[0] == j) {
+
+                        if (std::find(unaryOperator.add_effect.begin(), unaryOperator.add_effect.end(), i) !=
+                            unaryOperator.add_effect.end()) {
 
 
-                            //operator is used
-                            vector <PropID> temp{i, j};
+                            vector <PropID> resulte_after_operator{i};
 
-                            temp.erase(std::remove(temp.begin(), temp.end(), unaryOperator.add_effect[0]), temp.end());
 
-                            temp.reserve((unaryOperator.preconditions.size()));
-                            temp.insert(temp.end(), unaryOperator.preconditions.begin(),
+                            //operator is used (regression)
+                            for (PropID propId : unaryOperator.add_effect){
+                                resulte_after_operator.erase(std::remove(resulte_after_operator.begin(), resulte_after_operator.end(), propId),
+                                           resulte_after_operator.end());
+                            }
+
+                            resulte_after_operator.reserve((unaryOperator.preconditions.size()));
+                            resulte_after_operator.insert(resulte_after_operator.end(), unaryOperator.preconditions.begin(),
                                         unaryOperator.preconditions.end());
-
-                            utils::sort_unique(temp);
+                            utils::sort_unique(resulte_after_operator);
 
                             //takes min with temp.size() <= 2. with more it takes max
                             int cost = 0;
-                            if (temp.size() == 1) {
-                                cost = strips_Task.original_propIDs[temp[0]];
-                            } else if (temp.size() == 2) {
-                                cost = strips_Task.prop_pairs2[temp[0]][temp[1]];
-                            }else if (temp.size() < 1){
+                            if (resulte_after_operator.size() == 1) {
+                                cost = dual_StripsTask.h_value_for_single_propId[resulte_after_operator[0]];
+                            } else if (resulte_after_operator.size() == 2) {
+                                cost = dual_StripsTask.h_value_for_pair[resulte_after_operator[0]][resulte_after_operator[1]];
+                            } else if (resulte_after_operator.size() < 1) {
                                 continue;
                             } else {
-                                for (PropID propId: temp) {
-                                    if (cost < strips_Task.original_propIDs[propId])
-                                        cost = strips_Task.original_propIDs[propId];
-                                    for (PropID propId1: temp) {
-                                        if (propId < propId1 && cost < strips_Task.prop_pairs2[propId][propId1]) {
-                                            cost = strips_Task.prop_pairs2[propId][propId1];
+                                for (PropID propId: resulte_after_operator) {
+                                    if (cost < dual_StripsTask.h_value_for_single_propId[propId])
+                                        cost = dual_StripsTask.h_value_for_single_propId[propId];
+                                    for (PropID propId1: resulte_after_operator) {
+                                        if (propId < propId1 &&
+                                            cost < dual_StripsTask.h_value_for_pair[propId][propId1]) {
+                                            cost = dual_StripsTask.h_value_for_pair[propId][propId1];
                                         }
                                     }
                                 }
                             }
                             //takes the min for all operators
                             cost = cost + unaryOperator.base_cost;
-                            if (cost < strips_Task.prop_pairs2[i][j]) {
-                                strips_Task.prop_pairs2[i][j] = cost;
+                            if (cost < dual_StripsTask.h_value_for_single_propId[i]) {
+                                dual_StripsTask.h_value_for_single_propId[i] = cost;
+                                changed = true;
+
+                            }
+                        }
+                    }
+                }
+                //sets value for pair of variables
+                for (int j = i + 1; j < dual_StripsTask.h_value_for_single_propId.size(); ++j) {
+
+                    //goes through all operators
+                    for (UnaryOperator &unaryOperator: dual_StripsTask.unary_operators) {
+                        //checks if delete effect is present
+                        if (std::find(unaryOperator.del_effects.begin(), unaryOperator.del_effects.end(),
+                                      i) != unaryOperator.del_effects.end() ||
+                            std::find(unaryOperator.del_effects.begin(), unaryOperator.del_effects.end(),
+                                      j) != unaryOperator.del_effects.end()) {
+                        } else {
+                            //an add effect must be present
+                            bool i_or_j_is_included = false;
+                            for(PropID propId : unaryOperator.add_effect){
+                                if (propId == i || propId == j) {
+                                    i_or_j_is_included = true;
+                                    continue;
+                                }
+                            }
+                            if (i_or_j_is_included){
+                                //operator is used
+                                vector <PropID> resulte_after_operator{i, j};
+
+                                for(PropID propId : unaryOperator.add_effect){
+                                    resulte_after_operator.erase(std::remove(resulte_after_operator.begin(), resulte_after_operator.end(), propId),
+                                               resulte_after_operator.end());
+                                }
+
+                                resulte_after_operator.reserve((unaryOperator.preconditions.size()));
+                                resulte_after_operator.insert(resulte_after_operator.end(), unaryOperator.preconditions.begin(),
+                                            unaryOperator.preconditions.end());
+                                utils::sort_unique(resulte_after_operator);
+
+
+                                //takes min with temp.size() <= 2. with more it takes max
+                                int cost = 0;
+                                if (resulte_after_operator.size() == 1) {
+                                    cost = dual_StripsTask.h_value_for_single_propId[resulte_after_operator[0]];
+                                } else if (resulte_after_operator.size() == 2) {
+                                    cost = dual_StripsTask.h_value_for_pair[resulte_after_operator[0]][resulte_after_operator[1]];
+                                } else if (resulte_after_operator.size() < 1) {
+                                    continue;
+                                } else {
+                                    for (PropID propId: resulte_after_operator) {
+                                        if (cost < dual_StripsTask.h_value_for_single_propId[propId])
+                                            cost = dual_StripsTask.h_value_for_single_propId[propId];
+                                        for (PropID propId1: resulte_after_operator) {
+                                            if (propId < propId1 &&
+                                                cost < dual_StripsTask.h_value_for_pair[propId][propId1]) {
+                                                cost = dual_StripsTask.h_value_for_pair[propId][propId1];
+
+                                            }
+                                        }
+                                    }
+                                }
+                                //takes the min for all operators
+                                cost = cost + unaryOperator.base_cost;
+                                if (cost < dual_StripsTask.h_value_for_pair[i][j]) {
+                                    dual_StripsTask.h_value_for_pair[i][j] = cost;
+                                    changed = true;
+                                }
                             }
                         }
                     }
@@ -152,35 +171,27 @@ namespace dual {
         }
     }
 
-
     int Duality::compute_heuristic(const State &ancestor_state) {
         State state = convert_ancestor_state(ancestor_state);
 
-
-        setup_initial_state();
-        relaxed_exploration();
+        //setup_initial_state();
+        //relaxed_exploration();
 
 
         int total_cost = 0;
-        for (PropID goal_id : strips_Task.goal_propositions) {
-            total_cost = max(total_cost, strips_Task.original_propIDs[goal_id]);
-            for (PropID goal_id2 : strips_Task.goal_propositions){
+        for (PropID goal_id : dual_StripsTask.goal_propositions) {
+            total_cost = max(total_cost, dual_StripsTask.h_value_for_single_propId[goal_id]);
+            for (PropID goal_id2 : dual_StripsTask.goal_propositions){
 
                 if(goal_id < goal_id2){
-                    total_cost = max(total_cost, strips_Task.prop_pairs2[goal_id][goal_id2]);
+                    total_cost = max(total_cost, dual_StripsTask.h_value_for_pair[goal_id][goal_id2]);
                 }
             }
         }
-        std::cout << "total_cost  " << total_cost << std::endl;
+        //std::cout << "total_cost  " << total_cost << std::endl;
         return total_cost;
     }
 
-
-    /*int H2Heuristic::compute_heuristic(const State &ancestor_state) {
-        State state = convert_ancestor_state(ancestor_state);
-        // TODO
-        return 0;
-    }*/
 
     static shared_ptr<Heuristic> _parse(OptionParser &parser) {
         Heuristic::add_options_to_parser(parser);

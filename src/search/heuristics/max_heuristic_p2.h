@@ -13,6 +13,7 @@
 #include "../heuristic.h"
 #include <cassert>
 
+
 namespace max_heuristic_p2 {
     using strips_task::PropID;
     using strips_task::OpID;
@@ -23,11 +24,8 @@ namespace max_heuristic_p2 {
         priority_queues::AdaptiveQueue<PropID> queue;
 
     protected:
-        strips_task::StripsTask strips_Task;
+        strips_task::Normal_Stripstask normal_strips_Task;
         strips_task::StripsTask p2_task;
-        //TODO std::vector<UnaryOperator> unary_operators;
-        //TODO std::vector<Proposition> propositions;
-        //TODO std::vector<PropID> goal_propositions;
 
         array_pool::ArrayPool preconditions_pool;
         array_pool::ArrayPool precondition_of_pool;
@@ -50,6 +48,8 @@ namespace max_heuristic_p2 {
         virtual int compute_heuristic(const State &ancestor_state) override;
     public:
         explicit HSPMaxHeuristic_P2(const options::Options &options);
+
+
     };
 
 }

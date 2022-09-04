@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 
+
 namespace strips_task {
 struct Proposition;
 struct UnaryOperator;
@@ -53,6 +54,64 @@ struct UnaryOperator {
     int unsatisfied_preconditions;
 };
 
+
+
+
+class Normal_Stripstask {
+
+    std::vector <PropID> proposition_offsets;
+public:
+    std::vector <PropID> initial_propositions;
+    std::vector <PropID> goal_propositions;
+    std::vector <UnaryOperator> unary_operators;
+    std::vector <Proposition> propositions;
+    std::vector <UnaryOperator> operators;
+
+
+    void build_unary_operators(const OperatorProxy &op);
+
+
+    PropID get_prop_id(const Proposition &prop) const {
+        PropID prop_id = &prop - propositions.data();
+        assert(utils::in_bounds(prop_id, propositions));
+        return prop_id;
+    }
+
+    OpID get_op_id(const UnaryOperator &op) const {
+        OpID op_id = &op - unary_operators.data();
+        assert(utils::in_bounds(op_id, unary_operators));
+        return op_id;
+    }
+
+    PropID get_prop_id(int var, int value) const;
+
+    PropID get_prop_id(const FactProxy &fact) const;
+
+    Proposition *get_proposition(PropID prop_id) {
+        return &propositions[prop_id];
+    }
+
+    UnaryOperator *get_operator(OpID op_id) {
+        return &unary_operators[op_id];
+    }
+
+    const Proposition *get_proposition(int var, int value) const;
+
+    Proposition *get_proposition(int var, int value);
+
+    Proposition *get_proposition(const FactProxy &fact);
+
+public:
+    explicit Normal_Stripstask(TaskProxy &task_proxy);
+
+    explicit Normal_Stripstask();
+};
+
+
+
+
+
+
 class StripsTask {
 public:
     // proposition_offsets[var_no]: first PropID related to variable var_no
@@ -61,6 +120,7 @@ public:
     std::vector<Proposition> propositions;
     std::vector<PropID> goal_propositions;
     std::vector<PropID> old_goal_propositions;
+    std::vector<PropID> initial_propositions;
 
     std::unordered_map<std::string,std::unordered_map<std::string, int>> prop_pairs;
     Prop_Original_Size original_size;
@@ -75,7 +135,7 @@ public:
 /*protected:
     virtual int compute_heuristic(const State &ancestor_state) override;*/
 public:
-    explicit StripsTask(const TaskProxy &task_proxy);
+    explicit StripsTask(strips_task::Normal_Stripstask &normal_stripstask);
     explicit StripsTask();
 
 
@@ -114,7 +174,6 @@ public:
     Proposition *get_proposition(const FactProxy &fact);
 
 
-    StripsTask build_p2_strips_task(StripsTask &stripsTask);
 
     void build_goal_propositions(std::vector<PropID> &goal_propids);
 
@@ -128,16 +187,46 @@ public:
 
     std::vector<PropID> get_preconditions(OpID &opId);
 
+
+
+
+};
+
+
+
+
+class Dual_StripsTask {
+    //protected:
+public:
+        std::vector<PropID> initial_propositions;
+        std::vector<PropID> goal_propositions;
+        std::vector<UnaryOperator> unary_operators;
+        std::vector<Proposition> propositions;
+        std::vector<std::vector<int>> h_value_for_pair;
+        std::vector<PropID> h_value_for_single_propId;
+
     void unaryoperator_exchanging_roles();
 
-    void dual_goal(State &state);
+    std::vector<PropID> dual_goal(std::vector<PropID> &old_initial_propIds);
 
-    std::vector<PropID> dual_initial_state();
+    std::vector<PropID> dual_initial_state(std::vector<PropID> &old_goal_propositions);
 
     void build_dual_pairs();
+public:
+    explicit Dual_StripsTask(strips_task::Normal_Stripstask &normal_stripstask);
+    explicit Dual_StripsTask();
 
 
-    };
+
+    PropID get_prop_id(const Proposition &prop) const {
+        PropID prop_id = &prop - propositions.data();
+        //assert(utils::in_bounds(prop_id, propositions));
+        return prop_id;
+    }
+};
+
+
+
 }
 
 #endif

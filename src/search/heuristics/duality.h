@@ -10,6 +10,7 @@
 #include <cassert>
 #include "strips_task.h"
 
+
 namespace dual {
     using strips_task::PropID;
     using strips_task::OpID;
@@ -20,7 +21,8 @@ namespace dual {
         priority_queues::AdaptiveQueue<PropID> queue;
 
     protected:
-        strips_task::StripsTask strips_Task;
+        strips_task::Normal_Stripstask stripsTask;
+        strips_task::Dual_StripsTask dual_StripsTask;
         std::vector<PropID> old_goal;
 
 

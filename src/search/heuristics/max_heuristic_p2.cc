@@ -31,51 +31,11 @@ namespace max_heuristic_p2 {
         : Heuristic(opts) {
 
         //build p2_task
-            strips_Task = strips_task::StripsTask(task_proxy);
-            p2_task = strips_Task.build_p2_strips_task(strips_Task);
-
-        /*for (const UnaryOperator &op: p2_task.unary_operators) {
-            std::cout << std::endl;
-            std::cout << "    OpID " << p2_task.get_op_id(op) << ":" << std::endl;
-            std::cout << "    num preconditions: " << op.num_preconditions << std::endl;
-            std::cout << "    preconditions: " << op.preconditions << std::endl;
-            std::cout << "    add effect: " << op.add_effect << std::endl;
-            std::cout << "    num delete effect: " << op.num_del_effects << std::endl;
-            std::cout << "    del effect: " << op.del_effects << std::endl;
-            std::cout << "    original operator no: " << op.operator_no << std::endl;
-            std::cout << "    original operator cost: " << op.base_cost << std::endl;
-        }*/
-
-        // Build propositions.
-        //TODO propositions = p2_task.propositions;
-
-        /*VariablesProxy variables = propositions;
-        proposition_offsets.reserve(propositions.size());
-        PropID offset = 0;
-        for (VariableProxy var : variables) {
-            proposition_offsets.push_back(offset);
-            offset += var.get_domain_size();
-        }
-        assert(offset == static_cast<int>(propositions.size()));*/
+            normal_strips_Task = strips_task::Normal_Stripstask(task_proxy);
+            p2_task = strips_task::StripsTask(normal_strips_Task);
 
 
-        // Build goal propositions. p2_task.goal_propositions
-        //TODO goal_propositions = p2_task.goal_propositions;
-        /*vector<PropID> new_goal_propositions;
-        for (PropID &propId : goal_propids){
-            new_goal_propositions.push_back(propId);
-            for (Proposition &proposition : propositions) {
-                insert_propid(new_goal_propositions, get_prop_id(proposition), propId);
-            }
-        }
-        goal_propositions = new_goal_propositions;*/
-
-
-        // Build unary operators for operators and axioms.
-        p2_task.rebuild_unaryopearator();
-        //TODO unary_operators = p2_task.unary_operators;
         preconditions_pool = p2_task.preconditions_pool;
-
         // Cross-reference unary operators.
         vector<vector<OpID>> precondition_of_vectors(p2_task.propositions.size());
         int num_unary_ops = p2_task.unary_operators.size();
@@ -92,8 +52,7 @@ namespace max_heuristic_p2 {
                     precondition_of_pool.append(precondition_of_vec);
             p2_task.propositions[prop_id].num_precondition_occurences = precondition_of_vec.size();
         }
-        //TODO p2_task.propositions = propositions;
-        //TODO cout << p2_task.propositions.size() << "-----------" << propositions.size() << endl;
+
     }
 
 // heuristic computation
@@ -110,25 +69,29 @@ namespace max_heuristic_p2 {
             op.unsatisfied_preconditions = op.num_preconditions;
             op.cost = op.base_cost; // will be increased by precondition costs
 
-            if (op.unsatisfied_preconditions == 0)
-                enqueue_if_necessary(op.add_effect[0], op.base_cost);
+            if (op.unsatisfied_preconditions == 0) {
+            enqueue_if_necessary(op.add_effect[0], op.base_cost);
+                if (op.add_effect.size() > 1){
+                    enqueue_if_necessary(op.add_effect[1], op.base_cost);
+                }
+            }
         }
 
     }
 
     void HSPMaxHeuristic_P2::setup_exploration_queue_state(const State &state) {
-        for (FactProxy fact : state) {
-            PropID init_prop = p2_task.get_prop_id(fact);
-            enqueue_if_necessary(init_prop, 0);
 
-            for (FactProxy fact2 : state) {
-                PropID init_prop2 = p2_task.get_prop_id(fact2);
+        for (PropID propId: p2_task.initial_propositions) {
+            enqueue_if_necessary(propId, 0);
 
-                if (init_prop < init_prop2) {
-                    enqueue_if_necessary(p2_task.prop_pairs2[init_prop][init_prop2], 0);
+            for (PropID propId2 : p2_task.initial_propositions) {
+                if (propId < propId2) {
+                    enqueue_if_necessary(p2_task.prop_pairs2[propId][propId2], 0);
+
                 }
             }
         }
+
     }
 
     void HSPMaxHeuristic_P2::relaxed_exploration() {
@@ -152,8 +115,12 @@ namespace max_heuristic_p2 {
                                      unary_op->base_cost + prop_cost);
                 --unary_op->unsatisfied_preconditions;
                 assert(unary_op->unsatisfied_preconditions >= 0);
-                if (unary_op->unsatisfied_preconditions == 0)
+                if (unary_op->unsatisfied_preconditions == 0) {
                     enqueue_if_necessary(unary_op->add_effect[0], unary_op->cost);
+                    if (unary_op->add_effect.size() > 1){
+                        enqueue_if_necessary(unary_op->add_effect[1], unary_op->cost);
+                    }
+                }
             }
 
         }
@@ -175,6 +142,7 @@ namespace max_heuristic_p2 {
                 return DEAD_END;
             total_cost = max(total_cost, goal_cost);
         }
+        //exit(total_cost);
         return total_cost;
     }
 
